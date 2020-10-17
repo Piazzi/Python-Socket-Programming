@@ -1,16 +1,35 @@
 import socket
+import operator
 
-UDP_IP = "127.0.0.1"
-UDP_PORT = 12000
+# 'Converts' the string operator into a real operator
+operators = { 
+            "+": operator.add, 
+            "-": operator.sub, '*' : operator.mul,
+            '/' : operator.truediv,  
+            '%' : operator.mod,
+            '^' : operator.xor, 
+            }
+
+IP = "127.0.0.1"
+PORT = 12000
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+socket.bind((IP, PORT))
 
-socket.bind((UDP_IP, UDP_PORT))
-
-print('Listening At {}'.format(socket.getsockname()))
+print('Server Listening At {}'.format(socket.getsockname()))
 
 while True:
-    msg_bytes, address = socket.recvfrom(2048)
-    msg_str = msg_bytes.decode('utf-8')
-    print('Received from client {} : {}'.format(address, msg_str))
-    socket.sendto(msg_str.upper().encode(), address)
+    messageBytes, address = socket.recvfrom(2048)
+    messageString = messageBytes.decode('utf-8')
+    print('Received from client {} : {}'.format(address, messageString))
+
+    messageString = messageString.split(", ")
+    a = messageString[0]
+    b = messageString[1]
+    operator = messageString[2]
+    result = operators[operator](int(a), int(b))
+
+
+    socket.sendto(str(result).encode(), address)
+
+
