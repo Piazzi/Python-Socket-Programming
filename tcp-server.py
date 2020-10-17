@@ -1,39 +1,35 @@
-# Python program to implement server side of chat room. 
+# Python program to implement socket side of chat room. 
 import socket 
 
 IP = "127.0.0.1"
 PORT = 3030
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-server.bind((IP, PORT)) 
-server.listen(1) 
+socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+socket.bind((IP, PORT)) 
+socket.listen(1) 
 
 print('Waiting for someone to enter the chat...')
-connectionSocket, address = server.accept()
-print('Someone entered in the chat, say something!')
+connectionSocket, address = socket.accept()
+print('Someone entered in the chat, say something! \n')
 
 while True:
 
     print("<You>") 
-    yourMessage = input()
-
+    yourMessage = input(">")
+    print('\n')
     if yourMessage == 'X':
-        server.send('Bye!'.encode())
+        connectionSocket.send('Bye!'.encode())
         break
-
-    print('\n')    
-
     connectionSocket.send(yourMessage.encode())
+
     messageReceived = connectionSocket.recv(2048)
     print('<Fulano>')
-    print(messageReceived.decode())
-
-    if messageReceived == 'Bye!':
+    print(messageReceived.decode() + '\n')
+    if messageReceived.decode() == 'Bye!':
         break
-
-
     
-connectionSocket.close()
+
+socket.close()
 print('Connection Closed')
 
 

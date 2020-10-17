@@ -2,35 +2,30 @@
 import socket 
 import select 
   
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-
 IP = "127.0.0.1"
 PORT = 3030
 
-server.connect((IP, PORT)) 
+socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+socket.connect((IP, PORT)) 
 print('Connected to the chat!')
-print('Press [X] to close the connection')
+print('Press [X] to close the connection \n')
 
 while True: 
   
-    serverMessage = server.recv(2048)
+    socketMessage = socket.recv(2048)
     print("<Fulano>")
-    print(serverMessage.decode())
-
-    if serverMessage == 'Bye!':
+    print(socketMessage.decode() + '\n')
+    if socketMessage.decode() == 'Bye!':
         break
 
     print("<You>") 
-    message = input()
+    message = input(">")
     if message == 'X':
-        server.send('Bye!'.encode())
+        socket.send('Bye!'.encode())
         break
-
-    server.send(message.encode()) 
-
     print('\n')
+    socket.send(message.encode()) 
 
 
-    
-server.close() 
+socket.close() 
 print('Connection Closed')

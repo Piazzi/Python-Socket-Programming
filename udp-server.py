@@ -27,9 +27,15 @@ while True:
     a = messageString[0]
     b = messageString[1]
     operator = messageString[2]
+
+    if a == 'X' or b == 'X' or operator == 'X':
+        break
+
     result = operators[operator](int(a), int(b))
 
 
     socket.sendto(str(result).encode(), address)
 
 
+print('Connection Closed')
+socket.close()
